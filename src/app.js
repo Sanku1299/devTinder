@@ -18,7 +18,7 @@ app.post("/signup", async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
     console.log(passwordHash);
 
-    //   Creating a new instance of the User model
+    // Creating a new instance of the User model
     const user = new User({
       firstName,
       lastName,
@@ -45,13 +45,6 @@ app.get("/user", async (req, res) => {
     } else {
       res.send(user);
     }
-
-    // const users = await User.find({ emailId: userEmail });
-    // if (users.length === 0) {
-    //   res.status(404).send("User not found");
-    // } else {
-    //   res.send(users);
-    // }
   } catch (err) {
     res.status(400).send("Something went wrong ");
   }
@@ -72,8 +65,6 @@ app.delete("/user", async (req, res) => {
   const userId = req.body.userId;
   try {
     const user = await User.findByIdAndDelete({ _id: userId });
-    //const user = await User.findByIdAndDelete(userId);
-
     res.send("User deleted successfully");
   } catch (err) {
     res.status(400).send("Something went wrong ");
