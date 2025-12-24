@@ -89,7 +89,7 @@ userSchema.methods.getJWT = async function () {
   return token;
 }
 
-userSchema.method.validatePassword = async function (passInputByUser) {
+userSchema.methods.validatePassword = async function (passInputByUser) {
   const user = this;
   const passwordHash = user.password;
 
