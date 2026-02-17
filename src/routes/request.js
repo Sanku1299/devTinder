@@ -7,9 +7,14 @@ const User = require("../models/user");
 
 requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res) => {
     try {
-        const toUserId = req.body.toUserId;
-        const fromUserId = req.body._id
-        const status = req.body.status
+        // const toUserId = req.body.toUserId;
+        // const fromUserId = req.body._id
+        // const status = req.body.status
+        const { toUserId } = req.params;
+        const fromUserId = req.user._id;
+        const status =
+            req.params.status.charAt(0).toUpperCase() +
+            req.params.status.slice(1).toLowerCase();
 
         const allowedStatus = ["Interested", "Ignored"];
         if (!allowedStatus.includes(status)) {
@@ -23,10 +28,13 @@ requestRouter.post("/request/send/:status/:toUserId", userAuth, async (req, res)
 
         const existingConnection = await ConnectionRequest.findOne({
             $or: [
-                { fromUserId, toUserId },
-                { fromUserId: toUserId, toUserId: fromUserId }
+                // { fromUserId, toUserId },
+                // { fromUserId: toUserId, toUserId: fromUserId }
+                { fromUserId: userId },
+                { toUserId: userId }
             ]
-        })
+        }).populate("fromUserId", "firstName lastName photoUrl age gender about")
+            .populate("toUserId", "firstName lastName photoUrl age gender about");
         if (existingConnection) {
             return res.status(400).send({ message: "Connection Request Already Exist!" })
         }
@@ -54,14 +62,14 @@ requestRouter.post("/request/review/:status/:requstId", userAuth, async (req, re
         const loggedInUser = req.user;
         const { status, requstId } = req.params;
 
-        const allowedStatus = ["accepted", "rejected"];
+        const allowedStatus = ["Accepted", "Rejected"];
         if (!allowedStatus.includes(status)) {
             return res.status(400).json({ messaage: "Status not allowed!" });
         }
 
         const connectionRequest = await ConnectionRequest.findOne({
             _id: requstId,
-            status: "interested",
+            status: "Interested",
             toUserId: loggedInUser._id
         })
 
