@@ -43,6 +43,6 @@ connectDB()
     });
   })
   .catch((err) => {
-    console.error("Database connection failed. Check MONGODB_URI and database network access.");
+    console.error("Database connection failed:", err.name, err.code || "", err.codeName || "");
     process.exitCode = 1;
   });
