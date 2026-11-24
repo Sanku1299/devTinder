@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: devtinder
+    runtime: node
+    plan: free
+    buildCommand: >-
+      npm ci &&
+      git clone https://github.com/Sanku1299/devTinder-web.git web &&
+      git -C web checkout 9a7502ab48d33782619509f8467139baf6fdb12f &&
+      npm ci --prefix web --include=dev &&
+      npm run build --prefix web
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false
