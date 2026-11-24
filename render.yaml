@@ -5,7 +5,8 @@ services:
     plan: free
     buildCommand: >-
       npm ci &&
-      git clone https://github.com/Sanku1299/devTinder-web.git web &&
+      (test -d web/.git || git clone https://github.com/Sanku1299/devTinder-web.git web) &&
+      git -C web fetch origin 9a7502ab48d33782619509f8467139baf6fdb12f &&
       git -C web checkout 9a7502ab48d33782619509f8467139baf6fdb12f &&
       npm ci --prefix web --include=dev &&
       npm run build --prefix web
