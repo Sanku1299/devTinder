@@ -1,6 +1,8 @@
 const express = require("express");
 const connectDB = require("./config/database");
 const app = express();
+const server = require("node:http").createServer(app);
+const attachChat = require("./chat");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
@@ -38,7 +40,8 @@ const port = process.env.PORT || 7777;
 connectDB()
   .then(() => {
     console.log("Database connection established...");
-    app.listen(port, () => {
+    attachChat(server);
+    server.listen(port, () => {
       console.log(`Server listening on port ${port}`);
     });
   })
