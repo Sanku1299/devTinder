@@ -44,6 +44,9 @@ function attachChat(server) {
         ],
       });
       if (!user || !accepted) return next(new Error("Chat is available to accepted connections."));
+      const partner = await User.findById(targetUserId).select("firstName lastName").lean();
+      if (!partner) return next(new Error("This connection is no longer available."));
+      socket.data.partnerName = [partner.firstName, partner.lastName].filter(Boolean).join(" ");
       socket.data.user = user;
       socket.data.expiresAt = session.exp * 1000;
       socket.data.room = [session._id, targetUserId.toLowerCase()].sort().join(":");
@@ -56,6 +59,7 @@ function attachChat(server) {
   io.on("connection", (socket) => {
     const { room, user, expiresAt } = socket.data;
     socket.join(room);
+    socket.emit("conversation", { partnerName: socket.data.partnerName });
     const expiry = setTimeout(() => socket.disconnect(true), expiresAt - Date.now());
     socket.on("disconnect", () => clearTimeout(expiry));
 
