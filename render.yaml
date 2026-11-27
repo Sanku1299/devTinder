@@ -6,7 +6,7 @@ services:
     buildCommand: >-
       npm ci &&
       git init web &&
-      git -C web fetch https://github.com/Sanku1299/devTinder-web.git fcbb3f64234585f55abfd65a766006178db5ca4b &&
+      git -C web fetch https://github.com/Sanku1299/devTinder-web.git ace84690fcbdadbcb712cb6693103390e24aa229 &&
       git -C web reset --hard FETCH_HEAD &&
       npm ci --prefix web --include=dev &&
       npm run build --prefix web
